@@ -25,18 +25,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
-          working-directory: website
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Install dependencies
         run: |
           npm install
           npx playwright install
-        working-directory: website
 
       - name: Run tests
         run: npm run test
-        working-directory: website
