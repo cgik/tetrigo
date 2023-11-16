@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/spf13/viper"
 	"log"
 
 	"main/internal/datastore"
@@ -9,9 +10,21 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func init() {
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+
+	log.Println("Getting config for application...")
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatal("Unable to load config file: %w", err)
+	}
+}
+
 func main() {
 	app := fiber.New()
-	mongo := datastore.ConnectMongo()
+	mongo := datastore.ConnectMongo(viper.GetString(`mongo.uri`))
 
 	log.Print("Connected to mongo: ", mongo)
 
@@ -20,10 +33,10 @@ func main() {
 	})
 
 	app.Get("/api/v1/game/init", func(c *fiber.Ctx) error {
-		inital_game := game.Init()
+		initGame := game.Init()
 
-		return c.SendString(string(inital_game))
+		return c.SendString(string(initGame))
 	})
 
-	log.Fatal(app.Listen(":18080"))
+	log.Fatal(app.Listen(viper.GetString(`app.port`)))
 }

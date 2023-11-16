@@ -10,41 +10,41 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type MongoStore struct {
+type MongoSession struct {
 	client *mongo.Client
 }
 
-func ConnectMongo() *MongoStore {
+func ConnectMongo(mongoUri string) *MongoSession {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	log.Println("Attempting to connect to mongo...")
+
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoUri))
 
 	if err != nil {
-		log.Print(err)
-		panic(err)
+		log.Fatal(err)
 	}
 
 	var result bson.M
 
 	if err := client.Database("admin").RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Decode(&result); err != nil {
-		log.Print(err)
-		panic(err)
+		log.Fatal(err)
 	}
 
 	log.Println("Connected to mongo.")
 
-	mongo := &MongoStore{
+	mongoClient := &MongoSession{
 		client: client,
 	}
 
-	return mongo
+	return mongoClient
 }
 
-func (s *MongoStore) Insert(item interface{}) error {
+func (m *MongoSession) Insert(collection string, item interface{}) error {
 	return nil
 }
 
-func (s *MongoStore) FindById(document string, id int) error {
+func (m *MongoSession) FindById(collection string, document string, id int) error {
 	return nil
 }
