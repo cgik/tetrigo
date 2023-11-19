@@ -23,6 +23,7 @@ func init() {
 }
 
 func main() {
+	log.Println("Starting application...")
 	app := fiber.New()
 	mongo := datastore.ConnectMongo(viper.GetString(`mongo.uri`))
 
@@ -38,5 +39,6 @@ func main() {
 		return c.SendString(string(initGame))
 	})
 
+	log.Println("Application started.")
 	log.Fatal(app.Listen(viper.GetString(`app.port`)))
 }

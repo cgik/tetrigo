@@ -26,9 +26,7 @@ func ConnectMongo(mongoUri string) *MongoSession {
 		log.Fatal(err)
 	}
 
-	var result bson.M
-
-	if err := client.Database("admin").RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Decode(&result); err != nil {
+	if err := pingMongo(*client); err != nil {
 		log.Fatal(err)
 	}
 
@@ -39,6 +37,16 @@ func ConnectMongo(mongoUri string) *MongoSession {
 	}
 
 	return mongoClient
+}
+
+func pingMongo(client mongo.Client) error {
+	var result bson.M
+
+	if err := client.Database("admin").RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Decode(&result); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (m *MongoSession) Insert(collection string, item interface{}) error {
