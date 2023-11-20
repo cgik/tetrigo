@@ -25,6 +25,7 @@ func init() {
 func main() {
 	log.Println("Starting application...")
 	app := fiber.New()
+
 	mongo := datastore.ConnectMongo(viper.GetString(`mongo.uri`))
 
 	log.Print("Connected to mongo: ", mongo)
