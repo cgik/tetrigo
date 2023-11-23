@@ -2,37 +2,36 @@ package datastore
 
 import (
 	"context"
-	"log"
-	"time"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log/slog"
+	"time"
 )
 
-type MongoSession struct {
+type MongoInterface struct {
 	client *mongo.Client
 }
 
-func ConnectMongo(mongoUri string) *MongoSession {
+func ConnectMongo(mongoUri string) *MongoInterface {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	log.Println("Attempting to connect to mongo...")
+	slog.Info("Attempting to connect to mongo...")
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoUri))
 
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("error=", err)
 	}
 
 	if err := pingMongo(*client); err != nil {
-		log.Fatal(err)
+		slog.Error("error=", err)
 	}
 
-	log.Println("Connected to mongo.")
+	slog.Info("Connected to mongo.")
 
-	mongoClient := &MongoSession{
+	mongoClient := &MongoInterface{
 		client: client,
 	}
 
@@ -49,10 +48,14 @@ func pingMongo(client mongo.Client) error {
 	return nil
 }
 
-func (m *MongoSession) Insert(collection string, item interface{}) error {
+func (m *MongoInterface) createCollection(collection string) error {
 	return nil
 }
 
-func (m *MongoSession) FindById(collection string, document string, id int) error {
+func (m *MongoInterface) Insert(collection string, item interface{}) error {
+	return nil
+}
+
+func (m *MongoInterface) FindById(collection string, document string, id int) error {
 	return nil
 }

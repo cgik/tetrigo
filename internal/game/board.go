@@ -7,7 +7,7 @@ type Board struct {
 }
 
 func createRow(rowLength int, y int) []*Block {
-	row := []*Block{}
+	var row []*Block
 
 	for x := 0; x < rowLength; x++ {
 		b := newBlock(y, x, 1)

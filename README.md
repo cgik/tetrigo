@@ -5,3 +5,8 @@ Puzzle League / Tetris Attack is a great game that hans't had any love for a lon
 This follows the standard of [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 This is to enable the usage of [release-please](https://github.com/googleapis/release-please)
+
+# Requirements
+- Golang 1.21 
+- Mongo (Optional—Set config.yaml mongo to false if not wanted.)
+

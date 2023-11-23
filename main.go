@@ -1,13 +1,12 @@
 package main
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 	"log"
-
+	"log/slog"
 	"main/internal/datastore"
 	game "main/internal/game"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 func init() {
@@ -15,7 +14,7 @@ func init() {
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 
-	log.Println("Getting config for application...")
+	slog.Info("Getting config for application...")
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal("Unable to load config file: %w", err)
@@ -23,12 +22,12 @@ func init() {
 }
 
 func main() {
-	log.Println("Starting application...")
+	slog.Info("Starting application...")
 	app := fiber.New()
 
 	mongo := datastore.ConnectMongo(viper.GetString(`mongo.uri`))
 
-	log.Print("Connected to mongo: ", mongo)
+	slog.Info("Connected to mongo: ", mongo)
 
 	app.Get("/health", func(c *fiber.Ctx) error {
 		return c.SendString("I'm awake, I'm awake...")
@@ -40,6 +39,6 @@ func main() {
 		return c.SendString(string(initGame))
 	})
 
-	log.Println("Application started.")
+	slog.Info("Application started.")
 	log.Fatal(app.Listen(viper.GetString(`app.port`)))
 }
