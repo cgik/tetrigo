@@ -3,6 +3,7 @@ app:
 
 mongo:
   uri: "mongodb://localhost:27017"
+  database: "tetris"
 
 feature:
   mongo: true

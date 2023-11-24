@@ -10,10 +10,11 @@ import (
 )
 
 type MongoInterface struct {
-	client *mongo.Client
+	client   *mongo.Client
+	database *mongo.Database
 }
 
-func ConnectMongo(mongoUri string) *MongoInterface {
+func ConnectMongo(mongoUri string, database string) *MongoInterface {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -32,7 +33,8 @@ func ConnectMongo(mongoUri string) *MongoInterface {
 	slog.Info("Connected to mongo.")
 
 	mongoClient := &MongoInterface{
-		client: client,
+		client:   client,
+		database: client.Database(database),
 	}
 
 	return mongoClient
@@ -53,6 +55,12 @@ func (m *MongoInterface) createCollection(collection string) error {
 }
 
 func (m *MongoInterface) Insert(collection string, item interface{}) error {
+	_, err := m.database.Collection(collection).InsertOne(context.Background(), item)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
