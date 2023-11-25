@@ -1,0 +1,21 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 'go.mod'
+          check-latest: true
+
+      - name: app tests
+        run: go test -v ./...
+
+      - name: build
+        run: go build -v ./...

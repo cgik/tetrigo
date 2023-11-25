@@ -23,11 +23,11 @@ func ConnectMongo(mongoUri string, database string) *MongoInterface {
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoUri))
 
 	if err != nil {
-		slog.Error("error=", err)
+		slog.Error("error: ", err)
 	}
 
 	if err := pingMongo(*client); err != nil {
-		slog.Error("error=", err)
+		slog.Error("error: ", err)
 	}
 
 	slog.Info("Connected to mongo.")
