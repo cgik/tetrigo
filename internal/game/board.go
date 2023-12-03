@@ -1,9 +1,11 @@
 package game
 
 type Board struct {
-	Blocks []*Block `json:"blocks"`
-	Width  int32    `json:"width"`
-	Height int32    `json:"height"`
+	Id       int32    `json:"id"`
+	Blocks   []*Block `json:"blocks"`
+	Width    int32    `json:"width"`
+	Height   int32    `json:"height"`
+	Position int32    `json:"position"`
 }
 
 func createRow(rowLength int, y int) []*Block {

@@ -50,7 +50,20 @@ func pingMongo(client mongo.Client) error {
 	return nil
 }
 
+func (m *MongoInterface) SetupDatabase(collections []string) error {
+	for _, collection := range collections {
+		if err := m.createCollection(collection); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (m *MongoInterface) createCollection(collection string) error {
+	if err := m.database.CreateCollection(context.Background(), collection); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -64,6 +77,13 @@ func (m *MongoInterface) Insert(collection string, item interface{}) error {
 	return nil
 }
 
-func (m *MongoInterface) FindById(collection string, document string, id int) error {
-	return nil
+func (m *MongoInterface) FindById(collection string, document string, id int) (bson.M, error) {
+	filter := bson.D{{Key: "_id", Value: id}}
+	var result bson.M
+
+	if err := m.database.Collection(collection).FindOne(context.Background(), filter).Decode(&result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }

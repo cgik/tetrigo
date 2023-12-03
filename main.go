@@ -1,11 +1,10 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 	"log/slog"
 	"main/internal/datastore"
-	game "main/internal/game"
+	"net/http"
 )
 
 func init() {
@@ -23,26 +22,32 @@ func init() {
 
 func main() {
 	slog.Info("Starting application...")
-	app := fiber.New()
 
 	mongo := datastore.ConnectMongo(
 		viper.GetString(`mongo.uri`),
 		viper.GetString(`mongo.database`))
 
-	game.New(mongo)
+	collections := viper.GetStringSlice(`mongo.collections`)
+	if err := mongo.SetupDatabase(collections); err != nil {
+		slog.Error("Unable to setup database: ", err)
+		panic(err)
+	}
 
-	app.Get("/health", func(c *fiber.Ctx) error {
-		return c.SendString("I'm awake, I'm awake...")
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("Up!"))
 	})
 
-	app.Get("/api/v1/game/init", func(c *fiber.Ctx) error {
-		initGame := game.Init()
-
-		return c.SendString(string(initGame))
+	http.HandleFunc("/api/v1/game/create", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
 	})
 
-	slog.Info("Application started.")
-	err := app.Listen(viper.GetString(`app.port`))
+	s := &http.Server{
+		Addr: viper.GetString(`app.port`),
+	}
+	err := s.ListenAndServe()
+
+	slog.Info("Application started, listening on port: ", s.Addr)
 
 	if err != nil {
 		slog.Error("Unable to start application: ", err)

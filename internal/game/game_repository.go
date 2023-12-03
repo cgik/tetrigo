@@ -18,7 +18,7 @@ func New(store Store) *Service {
 
 func (s *Service) CreateGame(game *Game) error {
 
-	if err := s.store.Insert("game", game); err != nil {
+	if err := s.store.Insert("games", game); err != nil {
 		return err
 	}
 
@@ -27,7 +27,7 @@ func (s *Service) CreateGame(game *Game) error {
 
 func (s *Service) GetGameByID(id int) error {
 
-	if err := s.store.FindById("game", "game", id); err != nil {
+	if err := s.store.FindById("tetris", "games", id); err != nil {
 		return err
 	}
 
