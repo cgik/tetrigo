@@ -5,7 +5,7 @@ go 1.21.0
 require (
 	github.com/gofiber/fiber/v2 v2.50.0
 	github.com/spf13/viper v1.17.0
-	go.mongodb.org/mongo-driver v1.13.0
+	go.mongodb.org/mongo-driver v1.13.1
 )
 
 require (
