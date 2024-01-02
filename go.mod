@@ -3,8 +3,8 @@ module main
 go 1.21.0
 
 require (
-	github.com/gorilla/mux v1.8.1
-	github.com/spf13/viper v1.18.1
+	github.com/labstack/echo v3.3.10+incompatible
+	github.com/spf13/viper v1.18.2
 	go.mongodb.org/mongo-driver v1.13.1
 )
 
@@ -13,7 +13,6 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/klauspost/compress v1.17.4 // indirect
-	github.com/labstack/echo v3.3.10+incompatible // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
