@@ -1,44 +1,45 @@
 package main
 
 import (
+	"github.com/labstack/echo"
 	"github.com/spf13/viper"
-	"log"
-
+	"log/slog"
+	"main/internal/config"
 	"main/internal/datastore"
-	game "main/internal/game"
-
-	"github.com/gofiber/fiber/v2"
+	"main/internal/game"
 )
 
-func init() {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
+func main() {
+	slog.Info("Starting application...")
+	cfg := config.LoadConfig()
 
-	log.Println("Getting config for application...")
+	m, _ := mongoSetup(cfg)
 
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatal("Unable to load config file: %w", err)
+	cfgServerPort := cfg.GetString(`app.port`)
+
+	e := echo.New()
+	game.NewHttpInterface(e, game.NewImplementation(m))
+
+	if err := e.Start(cfgServerPort); err != nil {
+		slog.Error("Unable to start application: ", err)
 	}
+
 }
 
-func main() {
-	log.Println("Starting application...")
-	app := fiber.New()
-	mongo := datastore.ConnectMongo(viper.GetString(`mongo.uri`))
+func mongoSetup(cfg *viper.Viper) (*datastore.DataStore, error) {
+	if cfg.GetString(`feature.mongo`) == `true` {
+		cfgMongoUri := cfg.GetString(`mongo.uri`)
+		cfgMongoDatabase := cfg.GetString(`mongo.database`)
 
-	log.Print("Connected to mongo: ", mongo)
+		mongo := datastore.ConnectMongo(
+			cfgMongoUri,
+			cfgMongoDatabase)
 
-	app.Get("/health", func(c *fiber.Ctx) error {
-		return c.SendString("I'm awake, I'm awake...")
-	})
+		cfgCollections := cfg.GetStringSlice(`mongo.collections`)
+		mongo.SetupDatabase(cfgCollections)
 
-	app.Get("/api/v1/game/init", func(c *fiber.Ctx) error {
-		initGame := game.Init()
+		return mongo, nil
+	}
 
-		return c.SendString(string(initGame))
-	})
-
-	log.Println("Application started.")
-	log.Fatal(app.Listen(viper.GetString(`app.port`)))
+	return nil, nil
 }

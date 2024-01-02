@@ -25,6 +25,17 @@ func moveRight(b *Block) {
 	b.X += 1
 }
 
+func getColorString(b *Block) string {
+	colors := map[int32]string{
+		0: "red",
+		1: "blue",
+		2: "green",
+		3: "yellow",
+		4: "purple",
+	}
+	return colors[b.Color]
+}
+
 func newBlock(x int, y int, color int32) *Block {
 	return &Block{
 		X:         x,
