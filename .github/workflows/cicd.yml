@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
   build-test:
@@ -11,7 +12,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: 'go.mod'
+          go-version-file: 'go.mod'
           check-latest: true
 
       - name: app tests
