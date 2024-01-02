@@ -9,12 +9,12 @@ import (
 	"time"
 )
 
-type MongoInterface struct {
+type DataStore struct {
 	client   *mongo.Client
 	database *mongo.Database
 }
 
-func ConnectMongo(mongoUri string, database string) *MongoInterface {
+func ConnectMongo(mongoUri string, database string) *DataStore {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -32,7 +32,7 @@ func ConnectMongo(mongoUri string, database string) *MongoInterface {
 
 	slog.Info("Connected to mongo.")
 
-	mongoClient := &MongoInterface{
+	mongoClient := &DataStore{
 		client:   client,
 		database: client.Database(database),
 	}
@@ -50,16 +50,15 @@ func pingMongo(client mongo.Client) error {
 	return nil
 }
 
-func (m *MongoInterface) SetupDatabase(collections []string) error {
+func (m *DataStore) SetupDatabase(collections []string) {
 	for _, collection := range collections {
 		if err := m.createCollection(collection); err != nil {
-			return err
+			panic(err)
 		}
 	}
-	return nil
 }
 
-func (m *MongoInterface) createCollection(collection string) error {
+func (m *DataStore) createCollection(collection string) error {
 	if err := m.database.CreateCollection(context.Background(), collection); err != nil {
 		return err
 	}
@@ -67,7 +66,7 @@ func (m *MongoInterface) createCollection(collection string) error {
 	return nil
 }
 
-func (m *MongoInterface) Insert(collection string, item interface{}) error {
+func (m *DataStore) Insert(collection string, item interface{}) error {
 	_, err := m.database.Collection(collection).InsertOne(context.Background(), item)
 
 	if err != nil {
@@ -77,7 +76,7 @@ func (m *MongoInterface) Insert(collection string, item interface{}) error {
 	return nil
 }
 
-func (m *MongoInterface) FindById(collection string, document string, id int) (bson.M, error) {
+func (m *DataStore) FindById(collection string, document string, id int) (bson.M, error) {
 	filter := bson.D{{Key: "_id", Value: id}}
 	var result bson.M
 

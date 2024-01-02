@@ -1,56 +1,45 @@
 package main
 
 import (
+	"github.com/labstack/echo"
 	"github.com/spf13/viper"
 	"log/slog"
+	"main/internal/config"
 	"main/internal/datastore"
-	"net/http"
+	"main/internal/game"
 )
-
-func init() {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
-
-	slog.Info("Getting config for application...")
-
-	if err := viper.ReadInConfig(); err != nil {
-		slog.Error("Unable to load config file: %w", err)
-		panic(err)
-	}
-}
 
 func main() {
 	slog.Info("Starting application...")
+	cfg := config.LoadConfig()
 
-	mongo := datastore.ConnectMongo(
-		viper.GetString(`mongo.uri`),
-		viper.GetString(`mongo.database`))
+	m, _ := mongoSetup(cfg)
 
-	collections := viper.GetStringSlice(`mongo.collections`)
-	if err := mongo.SetupDatabase(collections); err != nil {
-		slog.Error("Unable to setup database: ", err)
-		panic(err)
-	}
+	cfgServerPort := cfg.GetString(`app.port`)
 
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("Up!"))
-	})
+	e := echo.New()
+	game.NewHttpInterface(e, game.NewImplementation(m))
 
-	http.HandleFunc("/api/v1/game/create", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	})
-
-	s := &http.Server{
-		Addr: viper.GetString(`app.port`),
-	}
-	err := s.ListenAndServe()
-
-	slog.Info("Application started, listening on port: ", s.Addr)
-
-	if err != nil {
+	if err := e.Start(cfgServerPort); err != nil {
 		slog.Error("Unable to start application: ", err)
-		panic(err)
 	}
+
+}
+
+func mongoSetup(cfg *viper.Viper) (*datastore.DataStore, error) {
+	if cfg.GetString(`feature.mongo`) == `true` {
+		cfgMongoUri := cfg.GetString(`mongo.uri`)
+		cfgMongoDatabase := cfg.GetString(`mongo.database`)
+
+		mongo := datastore.ConnectMongo(
+			cfgMongoUri,
+			cfgMongoDatabase)
+
+		cfgCollections := cfg.GetStringSlice(`mongo.collections`)
+		mongo.SetupDatabase(cfgCollections)
+
+		return mongo, nil
+	}
+
+	return nil, nil
 }
