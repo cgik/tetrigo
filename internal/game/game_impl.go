@@ -17,13 +17,13 @@ func NewImplementation(store DataStore) *Implementation {
 	}
 }
 
-func (s *Implementation) CreateGame(game *Game) (*Game, error) {
-
+func (s *Implementation) CreateGame() (*Game, error) {
+	game := NewGame()
 	if err := s.store.Insert("games", game); err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	return game, nil
 }
 
 func (s *Implementation) GetGameByID(id int) (*Game, error) {

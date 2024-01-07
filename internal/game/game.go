@@ -9,3 +9,11 @@ type Game struct {
 	User       *auth.User   `json:"user"`
 	Spectators []*auth.User `json:"spectators"`
 }
+
+func NewGame() *Game {
+	game := new(Game)
+
+	game.Board = InitBoard()
+
+	return game
+}

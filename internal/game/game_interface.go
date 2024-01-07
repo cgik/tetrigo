@@ -1,16 +1,12 @@
 package game
 
 import (
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 type Impl interface {
-	CreateGame(game *Game) (*Game, error)
+	CreateGame() (*Game, error)
 	GetGameByID(id int) (*Game, error)
-}
-
-type ResponseError struct {
-	Message string `json:"message"`
 }
 
 type Interface struct {
@@ -26,5 +22,11 @@ func NewHttpInterface(e *echo.Echo, impl Impl) {
 }
 
 func (s *Interface) CreateGame(c echo.Context) error {
-	return c.JSON(200, "Hello World")
+	g, err := s.impl.CreateGame()
+
+	if err != nil {
+		return c.JSON(500, err)
+	}
+
+	return c.JSON(200, g)
 }
