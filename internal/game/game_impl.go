@@ -1,14 +1,21 @@
 package game
 
-import "go.mongodb.org/mongo-driver/bson"
+import (
+	"encoding/json"
+	"log/slog"
+)
 
 type DataStore interface {
 	Insert(collection string, item interface{}) error
-	FindById(collection string, document string, id int) (bson.M, error)
+	FindById(collection string, id string) ([]byte, error)
 }
 
 type Implementation struct {
 	store DataStore
+}
+
+type Results struct {
+	Game *Game `json:"game"`
 }
 
 func NewImplementation(store DataStore) *Implementation {
@@ -26,11 +33,24 @@ func (s *Implementation) CreateGame() (*Game, error) {
 	return game, nil
 }
 
-func (s *Implementation) GetGameByID(id int) (*Game, error) {
+func (s *Implementation) GetGameByID(id string) (*Game, error) {
+	game, err := s.store.FindById("games", id)
 
-	if _, err := s.store.FindById("tetris", "games", id); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	g := ConvertToStruct(game)
+
+	return g, nil
+}
+
+func ConvertToStruct(j []byte) *Game {
+	game := new(Game)
+
+	json.Unmarshal(j, &game)
+
+	slog.Info("ConvertToStruct", "msg", string(j))
+
+	return game
 }

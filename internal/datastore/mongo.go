@@ -2,7 +2,9 @@ package datastore
 
 import (
 	"context"
+	"encoding/json"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log/slog"
@@ -43,7 +45,8 @@ func ConnectMongo(mongoUri string, database string) *DataStore {
 func pingMongo(client mongo.Client) error {
 	var result bson.M
 
-	if err := client.Database("admin").RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Decode(&result); err != nil {
+	if err := client.Database("admin").
+		RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Decode(&result); err != nil {
 		return err
 	}
 
@@ -67,7 +70,8 @@ func (m *DataStore) createCollection(collection string) error {
 }
 
 func (m *DataStore) Insert(collection string, item interface{}) error {
-	_, err := m.database.Collection(collection).InsertOne(context.Background(), item)
+	_, err := m.database.Collection(collection).
+		InsertOne(context.Background(), item)
 
 	if err != nil {
 		return err
@@ -76,13 +80,23 @@ func (m *DataStore) Insert(collection string, item interface{}) error {
 	return nil
 }
 
-func (m *DataStore) FindById(collection string, document string, id int) (bson.M, error) {
-	filter := bson.D{{Key: "_id", Value: id}}
+func (m *DataStore) FindById(collection string, id string) ([]byte, error) {
+	objId, err := primitive.ObjectIDFromHex(id)
 	var result bson.M
 
-	if err := m.database.Collection(collection).FindOne(context.Background(), filter).Decode(&result); err != nil {
+	err = m.database.Collection(collection).
+		FindOne(context.TODO(), bson.D{{"_id", objId}}).
+		Decode(&result)
+
+	if err != nil {
 		return nil, err
 	}
 
-	return result, nil
+	jsonResult, err := json.Marshal(result)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return jsonResult, nil
 }

@@ -3,9 +3,9 @@ package game
 import "main/internal/auth"
 
 type Game struct {
-	Id         int32        `json:"id"`
+	Id         int          `json:"id"`
 	Board      *Board       `json:"board"`
-	Score      int32        `json:"score"`
+	Score      int          `json:"score"`
 	User       *auth.User   `json:"user"`
 	Spectators []*auth.User `json:"spectators"`
 }
@@ -13,7 +13,10 @@ type Game struct {
 func NewGame() *Game {
 	game := new(Game)
 
-	game.Board = InitBoard()
+	board := InitBoard()
+
+	game.Board = board
+	game.Score = 0
 
 	return game
 }
