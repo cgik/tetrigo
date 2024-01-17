@@ -23,11 +23,10 @@ func InitBoard() *Board {
 
 	board.Width = 10
 	board.Height = 20
+	board.Position = 0
 
-	board.Blocks = []*Block{}
-
-	for height := 0; height < int(board.Height)-1; height++ {
-		createRow(int(board.Width), height)
+	for y := 0; y < int(board.Height); y++ {
+		board.Blocks = append(board.Blocks, createRow(int(board.Width), y)...)
 	}
 
 	return board

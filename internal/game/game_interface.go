@@ -1,14 +1,16 @@
 package game
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 type Impl interface {
-	CreateGame() (*Game, error)
-	GetGameByID(id string) (*Game, error)
+	CreateGame() ([]byte, error)
+	GetGameByID(id string) ([]byte, error)
+	ListGames() ([]byte, error)
 }
 
 type Interface struct {
@@ -17,8 +19,8 @@ type Interface struct {
 }
 
 type Data struct {
-	Game    *Game  `json:"game"`
-	Message string `json:"message"`
+	Game    json.RawMessage `json:"game"`
+	Message string          `json:"message"`
 }
 
 type Response struct {
@@ -33,11 +35,12 @@ func NewHttpInterface(e *echo.Echo, impl Impl) {
 	}
 	e.GET("/game/create", i.CreateGame)
 	e.GET("/game/load/:id", i.LoadGame)
+	e.GET("/game/list", i.ListGames)
 }
 
 func (s *Interface) CreateGame(c echo.Context) error {
 	res := Response{}
-	
+
 	g, err := s.impl.CreateGame()
 
 	if err != nil {
@@ -66,6 +69,23 @@ func (s *Interface) LoadGame(c echo.Context) error {
 
 	res.Success = "true"
 	res.Data.Game = g
+
+	return c.JSON(http.StatusOK, res)
+}
+
+func (s *Interface) ListGames(c echo.Context) error {
+	res := Response{}
+
+	games, err := s.impl.ListGames()
+
+	if err != nil {
+		res.Success = "false"
+		res.Data.Message = fmt.Sprint(err)
+		return c.JSON(http.StatusInternalServerError, res)
+	}
+
+	res.Success = "true"
+	res.Data.Game = games
 
 	return c.JSON(http.StatusOK, res)
 }

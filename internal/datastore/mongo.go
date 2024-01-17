@@ -3,6 +3,7 @@ package datastore
 import (
 	"context"
 	"encoding/json"
+	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,19 +21,19 @@ func ConnectMongo(mongoUri string, database string) *DataStore {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	slog.Info("Attempting to connect to mongo...")
+	log.Info("Attempting to connect to mongo...")
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoUri))
 
 	if err != nil {
-		slog.Error("error: ", err)
+		log.Error("error: ", err)
 	}
 
 	if err := pingMongo(*client); err != nil {
 		slog.Error("error: ", err)
 	}
 
-	slog.Info("Connected to mongo.")
+	log.Info("Connected to mongo.")
 
 	mongoClient := &DataStore{
 		client:   client,
@@ -85,7 +86,7 @@ func (m *DataStore) FindById(collection string, id string) ([]byte, error) {
 	var result bson.M
 
 	err = m.database.Collection(collection).
-		FindOne(context.TODO(), bson.D{{"_id", objId}}).
+		FindOne(context.Background(), bson.D{{"_id", objId}}).
 		Decode(&result)
 
 	if err != nil {
@@ -93,6 +94,29 @@ func (m *DataStore) FindById(collection string, id string) ([]byte, error) {
 	}
 
 	jsonResult, err := json.Marshal(result)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return jsonResult, nil
+}
+
+func (m *DataStore) FindAll(collection string, key string) ([]byte, error) {
+	var results []bson.M
+
+	cur, err := m.database.Collection(collection).
+		Find(context.Background(), bson.D{{key, "1"}})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := cur.All(context.Background(), &results); err != nil {
+		return nil, err
+	}
+
+	jsonResult, err := json.Marshal(results)
 
 	if err != nil {
 		return nil, err

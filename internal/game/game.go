@@ -1,6 +1,8 @@
 package game
 
-import "main/internal/auth"
+import (
+	"main/internal/auth"
+)
 
 type Game struct {
 	Id         int          `json:"id"`

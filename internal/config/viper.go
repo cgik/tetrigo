@@ -1,8 +1,8 @@
 package config
 
 import (
+	"github.com/labstack/gommon/log"
 	"github.com/spf13/viper"
-	"log/slog"
 )
 
 func LoadConfig() *viper.Viper {
@@ -10,10 +10,10 @@ func LoadConfig() *viper.Viper {
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 
-	slog.Info("Getting config for application...")
+	log.Info("Getting config for application...")
 
 	if err := viper.ReadInConfig(); err != nil {
-		slog.Error("Unable to load config file: %w", err)
+		log.Error("Unable to load config file: %w", err)
 		panic(err)
 	}
 

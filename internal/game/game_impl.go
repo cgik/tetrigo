@@ -1,13 +1,11 @@
 package game
 
-import (
-	"encoding/json"
-	"log/slog"
-)
+import "github.com/labstack/gommon/log"
 
 type DataStore interface {
 	Insert(collection string, item interface{}) error
 	FindById(collection string, id string) ([]byte, error)
+	FindAll(collection string, key string) ([]byte, error)
 }
 
 type Implementation struct {
@@ -24,33 +22,45 @@ func NewImplementation(store DataStore) *Implementation {
 	}
 }
 
-func (s *Implementation) CreateGame() (*Game, error) {
+func (s *Implementation) CreateGame() ([]byte, error) {
 	game := NewGame()
 	if err := s.store.Insert("games", game); err != nil {
 		return nil, err
 	}
 
-	return game, nil
+	g, err := GameToJson(game)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return g, nil
 }
 
-func (s *Implementation) GetGameByID(id string) (*Game, error) {
+func (s *Implementation) GetGameByID(id string) ([]byte, error) {
 	game, err := s.store.FindById("games", id)
 
 	if err != nil {
 		return nil, err
 	}
 
-	g := ConvertToStruct(game)
+	g, err := ValidateGame(game)
+
+	if err != nil {
+		return nil, err
+	}
 
 	return g, nil
 }
 
-func ConvertToStruct(j []byte) *Game {
-	game := new(Game)
+func (s *Implementation) ListGames() ([]byte, error) {
+	games, err := s.store.FindAll("games", "_id")
 
-	json.Unmarshal(j, &game)
+	log.Info("games: ", games)
 
-	slog.Info("ConvertToStruct", "msg", string(j))
+	if err != nil {
+		return nil, err
+	}
 
-	return game
+	return games, nil
 }
