@@ -1,7 +1,5 @@
 package game
 
-import "github.com/labstack/gommon/log"
-
 type DataStore interface {
 	Insert(collection string, item interface{}) error
 	FindById(collection string, id string) ([]byte, error)
@@ -56,11 +54,17 @@ func (s *Implementation) GetGameByID(id string) ([]byte, error) {
 func (s *Implementation) ListGames() ([]byte, error) {
 	games, err := s.store.FindAll("games", "_id")
 
-	log.Info("games: ", games)
-
 	if err != nil {
 		return nil, err
 	}
 
 	return games, nil
+}
+
+func (s *Implementation) MoveCursor(game *Game, move int) error {
+	return nil
+}
+
+func (s *Implementation) SwitchBlocks(game *Game) error {
+	return nil
 }
