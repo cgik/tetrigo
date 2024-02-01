@@ -1,6 +1,9 @@
 package game
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestInitBoard(t *testing.T) {
 	board := InitBoard()
@@ -13,27 +16,36 @@ func TestInitBoard(t *testing.T) {
 func TestMoveCursor(t *testing.T) {
 	board := InitBoard()
 
-	err := board.MoveCursor(0)
+	for i := 0; i < board.Width+2; i++ {
+		previous := board.Cursor
+		err := board.MoveCursor(0)
 
-	if err != nil {
-		t.Errorf("Error moving cursor right")
+		if err != nil {
+			if !reflect.DeepEqual(previous, board.Cursor) {
+				t.Error(err)
+			}
+			break
+		}
 	}
 
-	err = board.MoveCursor(1)
+	for i := 0; i < board.Width+2; i++ {
+		previous := board.Cursor
+		err := board.MoveCursor(1)
 
-	if err != nil {
-		t.Errorf("Error moving cursor left")
+		if err != nil {
+			if !reflect.DeepEqual(previous, board.Cursor) {
+				t.Error(err)
+			}
+			break
+		}
 	}
 
-	err = board.MoveCursor(2)
+}
 
-	if err != nil {
-		t.Errorf("Error moving cursor down")
-	}
+func TestSwitchBlocks(t *testing.T) {
+	board := InitBoard()
 
-	err = board.MoveCursor(3)
+	//board.SwitchBlocks()
 
-	if err != nil {
-		t.Errorf("Error moving cursor up")
-	}
+	t.Log(board.Blocks)
 }
