@@ -1,11 +1,24 @@
 package game
 
-import "main/internal/auth"
+import (
+	"main/internal/auth"
+)
 
 type Game struct {
-	Id         int32        `json:"id"`
+	Id         int          `json:"id"`
 	Board      *Board       `json:"board"`
-	Score      int32        `json:"score"`
+	Score      int          `json:"score"`
 	User       *auth.User   `json:"user"`
 	Spectators []*auth.User `json:"spectators"`
+}
+
+func NewGame() *Game {
+	game := new(Game)
+
+	board := InitBoard()
+
+	game.Board = board
+	game.Score = 0
+
+	return game
 }

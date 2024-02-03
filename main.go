@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 	"log/slog"
 	"main/internal/config"
@@ -13,20 +13,20 @@ func main() {
 	slog.Info("Starting application...")
 	cfg := config.LoadConfig()
 
-	m, _ := mongoSetup(cfg)
+	httpServer := echo.New()
+
+	storage := mongoSetup(cfg)
+	game.NewHttpInterface(httpServer, game.NewImplementation(storage))
 
 	cfgServerPort := cfg.GetString(`app.port`)
 
-	e := echo.New()
-	game.NewHttpInterface(e, game.NewImplementation(m))
-
-	if err := e.Start(cfgServerPort); err != nil {
+	if err := httpServer.Start(cfgServerPort); err != nil {
 		slog.Error("Unable to start application: ", err)
 	}
 
 }
 
-func mongoSetup(cfg *viper.Viper) (*datastore.DataStore, error) {
+func mongoSetup(cfg *viper.Viper) *datastore.DataStore {
 	if cfg.GetString(`feature.mongo`) == `true` {
 		cfgMongoUri := cfg.GetString(`mongo.uri`)
 		cfgMongoDatabase := cfg.GetString(`mongo.database`)
@@ -38,8 +38,8 @@ func mongoSetup(cfg *viper.Viper) (*datastore.DataStore, error) {
 		cfgCollections := cfg.GetStringSlice(`mongo.collections`)
 		mongo.SetupDatabase(cfgCollections)
 
-		return mongo, nil
+		return mongo
 	}
 
-	return nil, nil
+	return nil
 }
