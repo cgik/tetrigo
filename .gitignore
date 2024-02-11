@@ -23,3 +23,6 @@ go.work
 .idea
 
 build/
+
+.DS_Store
+node_modules
