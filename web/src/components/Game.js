@@ -1,5 +1,5 @@
 export default function Game({ router, canvasWidth, canvasHeight }) {
     return (
-        <canvas width={canvasWidth} height={canvasHeight}></canvas>
+        <canvas className="bg-neutral-400" width={canvasWidth} height={canvasHeight}/>
     )
 }

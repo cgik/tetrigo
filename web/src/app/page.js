@@ -1,10 +1,11 @@
-import Header from '../components/header'
+import Header from '@/components/Header'
+import Game from '@/components/Game'
 
 export default function Page() {
     return (
         <>
             <Header/>
-            <h1>Hello, Next.js!</h1>
+            <p>Home</p>
         </>
     )
 }

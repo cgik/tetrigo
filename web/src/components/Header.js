@@ -7,11 +7,13 @@ export default function Header() {
                 <Link href="/">tetrigo</Link>
             </div>
             <div className="flex-2 w-1/2 space-x-4">
-                <Link href="/play">Play</Link>
+                <Link href="/game/1">Play</Link>
                 <Link href="/leaderboard">Leaderboard</Link>
                 <Link href="/news">News</Link>
             </div>
-            <div className="flex-3 right-0 pr-4">Login</div>
+            <div className="flex-3 right-0 pr-4">
+                <Link href="/login">Login</Link>
+            </div>
         </header>
     );
 }
