@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/spf13/viper"
 	"log/slog"
 	"main/internal/config"
@@ -14,6 +15,7 @@ func main() {
 	cfg := config.LoadConfig()
 
 	httpServer := echo.New()
+	httpServer.Use(middleware.CORS())
 
 	storage := mongoSetup(cfg)
 	game.NewHttpInterface(httpServer, game.NewImplementation(storage))
