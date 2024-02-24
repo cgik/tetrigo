@@ -2,15 +2,14 @@
 
 import {useContext, useEffect, useRef, useState} from "react";
 import {drawBlock} from "@/common/graphics";
-import {fetchGame} from "@/common/fetch";
+import {fetchGetGame} from "@/common/game-api";
 
 function render(ctx, game) {
-    ctx.clearRect(0, 0, 336, 670);
-    console.log(game.data);
-    // game.board.forEach(
-    //     block => drawBlock(ctx, block, game)
-    // )
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
+    game.board.blocks.forEach(
+        block => drawBlock(ctx, block, game.board)
+    )
 }
 
 export default function Game({ canvasWidth, canvasHeight }) {
@@ -19,16 +18,20 @@ export default function Game({ canvasWidth, canvasHeight }) {
     let [game, setGame] = useState({});
 
     useEffect(() => {
-        const data= fetchGame(gameId);
-
-        setGame(data);
+        async function fetchData() {
+            const data = await fetchGetGame(gameId);
+            setGame(data);
+        }
+        fetchData();
     }, [gameId]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
+        if (game.data !== undefined) {
+            render(ctx, game.data.game)
+        }
 
-        render(ctx, game)
     }, [game]);
 
     return (
