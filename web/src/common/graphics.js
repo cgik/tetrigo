@@ -1,9 +1,9 @@
 export function drawBlock(ctx, object, game) {
     ctx.beginPath();
     ctx.rect(
-        object.x * game.width / 6,
-        (object.y * game.width / 6) - game.position,
-        game.height / 6, game.height / 12
+        object.x * ctx.canvas.width / game.width,
+        (object.y * ctx.canvas.width / game.width) - game.position,
+        ctx.canvas.width / game.width, ctx.canvas.height / game.height
     );
 
     switch (object.color) {
@@ -52,9 +52,9 @@ export function drawBlock(ctx, object, game) {
     ctx.strokeStyle = 'black';
     ctx.lineWidth = '3';
     ctx.rect(
-        object.x * game.width / 6,
-        (object.y * game.width / 6) - game.position,
-        game.width / 6, game.height / 12
+        object.x * ctx.canvas.width / game.width,
+        (object.y * ctx.canvas.width / game.width) - game.position,
+        ctx.canvas.width / game.width, ctx.canvas.height / game.height
     );
     ctx.stroke();
     ctx.closePath();

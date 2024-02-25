@@ -1,6 +1,6 @@
 'use client';
 
-import {useContext, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {drawBlock} from "@/common/graphics";
 import {fetchGetGame} from "@/common/game-api";
 
@@ -28,8 +28,9 @@ export default function Game({ canvasWidth, canvasHeight }) {
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
+
         if (game.data !== undefined) {
-            render(ctx, game.data.game)
+            render(ctx, game.data.game);
         }
 
     }, [game]);

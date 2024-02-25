@@ -26,8 +26,8 @@ func createRow(rowLength int, y int) []*Block {
 func InitBoard() *Board {
 	board := new(Board)
 
-	board.Width = 5
-	board.Height = 20
+	board.Width = 6
+	board.Height = 12
 	board.Position = 0
 	board.Cursor = []int{0, 0}
 
