@@ -1,16 +1,8 @@
 'use client';
 
-import {useEffect, useRef, useState} from "react";
-import {drawBlock} from "@/common/graphics";
+import {useEffect, useMemo, useRef, useState} from "react";
+import {renderCanvas} from "@/common/graphics";
 import {fetchGetGame} from "@/common/game-api";
-
-function render(ctx, game) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    game.board.blocks.forEach(
-        block => drawBlock(ctx, block, game.board)
-    )
-}
 
 export default function Game({ canvasWidth, canvasHeight }) {
     const canvasRef = useRef(null);
@@ -18,11 +10,11 @@ export default function Game({ canvasWidth, canvasHeight }) {
     let [game, setGame] = useState({});
 
     useEffect(() => {
-        async function fetchData() {
-            const data = await fetchGetGame(gameId);
-            setGame(data);
-        }
-        fetchData();
+        fetchGetGame(gameId).then(
+            data => {
+                setGame(data);
+            }
+        );
     }, [gameId]);
 
     useEffect(() => {
@@ -30,7 +22,7 @@ export default function Game({ canvasWidth, canvasHeight }) {
         const ctx = canvas.getContext('2d');
 
         if (game.data !== undefined) {
-            render(ctx, game.data.game);
+            renderCanvas(ctx, game.data.game);
         }
 
     }, [game]);

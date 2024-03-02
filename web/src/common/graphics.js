@@ -72,3 +72,11 @@ export function drawCursor(ctx, object, game) {
     ctx.stroke();
     ctx.closePath();
 }
+
+export function renderCanvas(ctx, game) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    game.board.blocks.forEach(
+        block => drawBlock(ctx, block, game.board)
+    )
+}
