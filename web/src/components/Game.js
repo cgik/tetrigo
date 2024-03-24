@@ -4,10 +4,14 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import {renderCanvas} from "@/common/graphics";
 import {fetchGetGame} from "@/common/game-api";
 
-export default function Game({ canvasWidth, canvasHeight }) {
+export default function Game({ id, canvasWidth, canvasHeight }) {
     const canvasRef = useRef(null);
-    const [gameId, setGameId] = useState("659e32832f2d328e97de49e3");
+    // const [gameId, setGameId] = useState("659e32832f2d328e97de49e3");
     let [game, setGame] = useState({});
+
+    const gameId = useMemo(() => {
+        return id;
+    }, [id]);
 
     useEffect(() => {
         fetchGetGame(gameId).then(
