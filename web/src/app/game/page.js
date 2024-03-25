@@ -3,19 +3,22 @@
 import Header from "@/components/Header";
 import Game from "@/components/Game";
 import {useSearchParams} from "next/navigation";
+import {Suspense}  from "react";
 import {fetchCreateGame} from "@/common/game-api";
 
 export default function GamePage() {
-    // TODO: Find game or create it and inject it into the Game component
-    const searchParams = useSearchParams();
-    const gameId = searchParams.get('id');
+    function GameSetup() {
+        const searchParams = useSearchParams();
+        const gameId = searchParams.get('id');
 
-    if (!gameId) {
-        fetchCreateGame().then(
-            (data) => {
-                console.log('Game created:', data);
-            }
-        );
+        if (!gameId) {
+            fetchCreateGame().then(
+                (data) => {
+                    console.log('Game created:', data);
+                }
+            );
+        }
+        return <Game id={gameId} canvasWidth={336} canvasHeight={670}/>
     }
 
     return (
@@ -24,7 +27,9 @@ export default function GamePage() {
             <main className="flex relative justify-center">
                 <div></div>
                 <div>
-                    <Game id={gameId} canvasWidth={336} canvasHeight={670}/>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <GameSetup/>
+                    </Suspense>
                 </div>
                 <div></div>
             </main>
