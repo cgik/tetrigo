@@ -11,4 +11,4 @@ build:
 	@go build -o bin/tetrigo main.go
 
 wasm:
-	@GOOS=js GOARCH=wasm go build -o build/tetrigo.wasm cmd/wasm/main.go
+	@GOOS=js GOARCH=wasm go build -o web/public/tetrigo.wasm cmd/wasm/main.go
