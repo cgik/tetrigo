@@ -1,13 +1,17 @@
-package wasm
+//go:build wasm
+// +build wasm
+
+package main
 
 import (
-	"main/internal/game"
+	"fmt"
 )
 
-func CreateGame() (*game.Game, error) {
-	return game.NewGame(), nil
+func main() {
+	fmt.Println("Hello, WebAssembly!")
 }
 
-func Test() {
-	println("Hello from wasm")
+//go:export sum
+func sum(a, b int) int {
+	return a + b
 }
