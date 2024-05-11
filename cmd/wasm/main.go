@@ -1,17 +1,9 @@
-//go:build wasm
-// +build wasm
-
-package main
+package wasm
 
 import (
 	"fmt"
 )
 
 func main() {
-	fmt.Println("Hello, WebAssembly!")
-}
-
-//go:export sum
-func sum(a, b int) int {
-	return a + b
+	fmt.Println("wasm loaded")
 }

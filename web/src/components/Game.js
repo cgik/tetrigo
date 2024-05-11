@@ -7,7 +7,7 @@ import {fetchGetGame} from "@/common/game-api";
 export default function Game({ id, canvasWidth, canvasHeight }) {
     const canvasRef = useRef(null);
     // const [gameId, setGameId] = useState("659e32832f2d328e97de49e3");
-    let [game, setGame] = useState({});
+    let [gameState, setGame] = useState({});
 
     const gameId = useMemo(() => {
         return id;
@@ -25,8 +25,8 @@ export default function Game({ id, canvasWidth, canvasHeight }) {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
 
-        if (game.data !== undefined) {
-            renderCanvas(ctx, game.data.game);
+        if (gameState.data !== undefined) {
+            renderCanvas(ctx, gameState.data.game);
         }
 
     }, [game]);

@@ -25,7 +25,6 @@ func main() {
 	if err := httpServer.Start(cfgServerPort); err != nil {
 		slog.Error("Unable to start application: ", err)
 	}
-
 }
 
 func mongoSetup(cfg *viper.Viper) *datastore.DataStore {
