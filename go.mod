@@ -5,6 +5,7 @@ go 1.22
 require (
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/labstack/gommon v0.4.2
+	github.com/matoous/go-nanoid/v2 v2.1.0
 	github.com/spf13/viper v1.18.2
 	go.mongodb.org/mongo-driver v1.15.0
 )
