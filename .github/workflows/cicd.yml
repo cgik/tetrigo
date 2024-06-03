@@ -26,3 +26,5 @@ jobs:
         working-directory: ./web
         run: |
           npm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
