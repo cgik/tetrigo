@@ -57,3 +57,5 @@ next-env.d.ts
 
 *.wasm
 public/static/wasm_exec.js
+
+.wrangler
