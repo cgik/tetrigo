@@ -21,7 +21,7 @@
     "@cloudflare/next-on-pages": "^1.11.3",
     "@cloudflare/workers-types": "^4.20240529.0",
     "autoprefixer": "^10",
-    "daisyui": "^4.11.1",
+    "daisyui": "^4.12.2",
     "eslint": "^8",
     "eslint-config-next": "^14",
     "postcss": "^8",
