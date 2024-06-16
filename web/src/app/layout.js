@@ -14,7 +14,11 @@ export default function RootLayout({ children }) {
   return (
     <html data-theme="dark" lang="en">
       <head>
-        <PlausibleProvider domain="tetrigo.ris.gg" />
+        <script
+          defer
+          data-domain="tetrigo.ris.gg"
+          src="https://plausible.io/js/script.js"
+        ></script>
       </head>
       <body className={inter.className}>{children}</body>
     </html>
