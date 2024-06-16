@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
         <script
           defer
           data-domain="tetrigo.ris.gg"
-          src="/modules/js/script.js"
+          src="https://plausible.io/js/script.js"
         />
       </head>
       <body className={inter.className}>{children}</body>
