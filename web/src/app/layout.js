@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import PlausibleProvider from "next-plausible";
+import Navigation from "@/components/Navigation";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
