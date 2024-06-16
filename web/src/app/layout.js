@@ -1,5 +1,4 @@
 import { Inter } from "next/font/google";
-import PlausibleProvider from "next-plausible";
 import Navigation from "@/components/Navigation";
 import "./globals.css";
 
@@ -17,7 +16,7 @@ export default function RootLayout({ children }) {
         <script
           defer
           data-domain="tetrigo.ris.gg"
-          src="https://plausible.io/js/script.js"
+          src="/modules/js/script.js"
         />
       </head>
       <body className={inter.className}>{children}</body>

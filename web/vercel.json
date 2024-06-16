@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/modules/js/script.js",
+      "destination": "https://plausible.io/js/script.js"
+    }
+  ]
+}
