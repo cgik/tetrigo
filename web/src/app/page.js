@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Header from '@/components/Header'
-import Game from '@/components/Game'
-import Stats from '@/components/Stats'
+import Navigation from "@/components/Navigation";
+import Game from "@/components/Game";
+import Stats from "@/components/Stats";
 import Script from "next/script";
 
 // async function wasmLoad() {
@@ -16,17 +16,17 @@ import Script from "next/script";
 // }
 
 export default function Page() {
-    return (
-        <div className="min-h-screen bg-base-200">
-            {/*<Script src="static/wasm_exec.js"*/}
-            {/*        onLoad={wasmLoad}*/}
-            {/*/>*/}
+  return (
+    <div className="min-h-screen bg-base-200">
+      {/*<Script src="static/wasm_exec.js"*/}
+      {/*        onLoad={wasmLoad}*/}
+      {/*/>*/}
 
-            <Header/>
+      <Navigation />
 
-            <div className="flex justify-center">
-                <Stats />
-            </div>
-        </div>
-    )
+      <div className="flex justify-center">
+        <Stats />
+      </div>
+    </div>
+  );
 }
