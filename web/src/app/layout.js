@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import Navigation from "@/components/Navigation";
+import PlausibleProvider from "next-plausible";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -13,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html data-theme="dark" lang="en">
       <head>
-        <script defer data-domain="tetrigo.ris.gg" src="/js/script.js"></script>
+        <PlausibleProvider domain="tetrigo.net"></PlausibleProvider>
       </head>
       <body className={inter.className}>{children}</body>
     </html>
