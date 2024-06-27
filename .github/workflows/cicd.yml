@@ -2,7 +2,10 @@ name: cicd
 on:
   push:
     branches:
-      - main
+      - gcp-deployment
+
+env:
+  GCP_REPOSITORY: us-west1-docker.pkg.dev
 
 jobs:
   web-build-upload:
@@ -15,11 +18,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: prepare version
+        run: |
+          VERSION=${GITHUB_SHA::7}
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            TAG_VERSION=${GITHUB_REF/refs\/tags\//}
+            echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
+          fi
+          echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: gcp login
         uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT }}
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
+          credentials_json: ${{ secrets.GCP_CRED_JSON }}
+
+      - name: gcp login
+        run: gcloud auth configure-docker ${{ env.GCP_REPOSITORY }} --quiet
 
       - name: docker build & upload
-        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+        env:
+          REGISTRY: ${{ env.GCP_REPOSITORY }}/${{ secrets.GCP_PROJECT }}/tetrigo
+        run: |
+          docker build -t ${{ env.REGISTRY }}/tetrigo-web:${{ env.VERSION }} .
+          docker push ${{ env.REGISTRY }}/tetrigo-web:${{ env.VERSION }}
