@@ -1,0 +1,16 @@
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      app:
+        description: 'Application name'
+        type: string
+        required: true
+
+jobs:
+  web-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
