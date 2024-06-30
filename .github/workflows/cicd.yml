@@ -2,24 +2,24 @@ name: cicd
 on:
   push:
     branches:
-      - main
+      - gcp-deployment
+    tags:
+      - 'v*'
+
+concurrency:
+  group: ${{ github.ref }}
 
 jobs:
-  web-build-upload:
-    permissions:
-      contents: "read"
-      id-token: "write"
+  build:
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/build.yml
+    with:
+      app: tetrigo-web
+    secrets: inherit
 
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: gcp login
-        uses: google-github-actions/auth@v2
-        with:
-          project_id: ${{ secrets.GCP_PROJECT }}
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
-
-      - name: docker build & upload
-        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+  deploy:
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    uses: ./.github/workflows/deploy.yml
+    with:
+      app: tetrigo-web
+    secrets: inherit
