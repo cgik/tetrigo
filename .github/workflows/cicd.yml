@@ -3,13 +3,23 @@ on:
   push:
     branches:
       - gcp-deployment
+    tags:
+      - 'v*'
 
 concurrency:
   group: ${{ github.ref }}
 
 jobs:
-  build_deploy:
+  build:
+    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/build.yml
+    with:
+      app: tetrigo-web
+    secrets: inherit
+
+  deploy:
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    uses: ./.github/workflows/deploy.yml
     with:
       app: tetrigo-web
     secrets: inherit
