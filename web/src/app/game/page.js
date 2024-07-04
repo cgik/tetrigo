@@ -1,6 +1,7 @@
 "use client";
 
 import Game from "@/components/Game";
+import Navigation from "@/components/Navigation";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { fetchCreateGame } from "@/common/game-api";
@@ -19,16 +20,13 @@ export default function GamePage() {
   }
 
   return (
-    <>
-      <main className="flex relative justify-center">
-        <div></div>
-        <div>
-          <Suspense fallback={<div>Loading...</div>}>
-            <GameSetup />
-          </Suspense>
-        </div>
-        <div></div>
-      </main>
-    </>
+    <div className="min-h-screen bg-base-200">
+      <Navigation />
+      <div className="flex justify-center">
+        <Suspense fallback={<div>Loading...</div>}>
+          <GameSetup />
+        </Suspense>
+      </div>
+    </div>
   );
 }
