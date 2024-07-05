@@ -54,3 +54,10 @@ jobs:
         run: |
           docker build -t ${{ env.REGISTRY }}/${{ inputs.app }}:${{ env.VERSION }} .
           docker push ${{ env.REGISTRY }}/${{ inputs.app }}:${{ env.VERSION }}
+
+  deploy:
+    needs: build-upload
+    uses: ./.github/workflows/deploy.yml
+    with:
+      app: tetrigo-web
+    secrets: inherit
