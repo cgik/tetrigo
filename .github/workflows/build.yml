@@ -12,7 +12,7 @@ env:
   GCP_REPOSITORY: us-west1-docker.pkg.dev
 
 jobs:
-  web-build-upload:
+  build-upload:
     permissions:
       contents: "read"
       id-token: "write"
@@ -39,10 +39,10 @@ jobs:
       
       - name: inject secrets
         uses: mikefarah/yq@master
-        env:
-          MONGO_URL: ${{ secrets.MONGO_URL }}
         with:
-          cmd: yq -i 'mongo.url = strenv(MONGO_URL)' 'config.yaml'
+          cmd: yq -i '.mongo.uri = strenv(MONGO_URI)' config.yaml
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URL }}
 
       - name: gcp login
         run: gcloud auth configure-docker ${{ env.GCP_REPOSITORY }} --quiet
@@ -50,6 +50,7 @@ jobs:
       - name: docker build & upload
         env:
           REGISTRY: ${{ env.GCP_REPOSITORY }}/${{ secrets.GCP_PROJECT }}/tetrigo
+          VERSION: ${{ env.VERSION }}
         run: |
           docker build -t ${{ env.REGISTRY }}/${{ inputs.app }}:${{ env.VERSION }} .
           docker push ${{ env.REGISTRY }}/${{ inputs.app }}:${{ env.VERSION }}
