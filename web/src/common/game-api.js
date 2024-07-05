@@ -1,5 +1,4 @@
-//const apiUrlV1 = `http://localhost:18080`
-const apiUrlV1 = `/api`
+const apiUrlV1 = process.env.NODE_ENV == "production" ? `/api` : `http://localhost:18080`
 
 export async function fetchGetGame(gameId) {
     const res = await fetch(`${apiUrlV1}/game/load/${gameId}`)
