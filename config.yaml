@@ -2,7 +2,7 @@ app:
   port: ":18080"
 
 mongo:
-  uri: "mongodb://tetrigo:password@localhost:27017"
+  uri: "mongodb://tetrigo:password@tetrigo-db:27017"
   database: "tetris"
   collections:
     - "users"
