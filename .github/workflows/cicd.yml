@@ -2,7 +2,7 @@ name: cicd
 on:
   push:
     branches:
-      - july-game-update-v1
+      - main
     # tags:
     #   - 'v*'
 
@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.ref == 'refs/heads/july-game-update-v1'
+    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/build.yml
     with:
       app: tetrigo-web
