@@ -2,10 +2,11 @@ package game
 
 import (
 	"main/internal/auth"
+	"main/internal/datastore"
 )
 
 type Game struct {
-	Id         int          `json:"id"`
+	Id         string       `json:"id"`
 	Board      *Board       `json:"board"`
 	Score      int          `json:"score"`
 	User       *auth.User   `json:"user"`
@@ -17,6 +18,7 @@ func NewGame() *Game {
 
 	board := InitBoard()
 
+	game.Id, _ = datastore.GenerateId()
 	game.Board = board
 	game.Score = 0
 

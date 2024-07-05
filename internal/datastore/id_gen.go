@@ -1,9 +1,8 @@
 package datastore
 
 import (
-	"strings"
-
 	"errors"
+	"strings"
 
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
@@ -13,7 +12,7 @@ const (
 	length          = 8
 )
 
-func New() (string, error) {
+func GenerateId() (string, error) {
 	return gonanoid.Generate(availableValues, length)
 }
 

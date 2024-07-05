@@ -9,12 +9,14 @@ import { fetchCreateGame } from "@/common/game-api";
 export default function GamePage() {
   function GameSetup() {
     const searchParams = useSearchParams();
-    const gameId = searchParams.get("id");
+    let gameId = searchParams.get("id");
 
     if (!gameId) {
       fetchCreateGame().then((data) => {
         console.log("Game created:", data);
-      });
+        gameId = data.game.id
+      })
+      return <div>Cannot find or create game.</div>
     }
     return <Game id={gameId} canvasWidth={336} canvasHeight={670} />;
   }
