@@ -36,6 +36,13 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_CRED_JSON }}
+      
+      - name: inject secrets
+        uses: mikefarah/yq@master
+        env:
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+        with:
+          cmd: yq -i 'mongo.url = strenv(MONGO_URL)' 'config.yaml'
 
       - name: gcp login
         run: gcloud auth configure-docker ${{ env.GCP_REPOSITORY }} --quiet

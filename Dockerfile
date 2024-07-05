@@ -1,23 +1,17 @@
-# FROM golang:1.22 as builder
+# I probably don't recommend this but I'm big lazy and want to keep costs as low as possible.
+# good luck :)
 
-# WORKDIR /workspace
-# COPY go.mod .
-# COPY go.sum .
+FROM golang:1.22 as go-build
 
-# RUN go mod download
+WORKDIR /workspace
+COPY go.mod .
+COPY go.sum .
 
-# COPY . .
+RUN go mod download
 
-# RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o app main.go
+COPY . .
 
-# FROM gcr.io/distroless/static:nonroot
-# WORKDIR /
-
-# COPY config.yaml .
-# COPY --from=builder /workspace/app .
-# USER nonroot:nonroot
-
-# ENTRYPOINT ["/app"]
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o app main.go
 
 FROM node:22-alpine as web-build
 
@@ -30,15 +24,25 @@ RUN npm install --frozen-lockfile
 COPY web/ .
 RUN npm run build
 
-FROM node:22-alpine as web-runner
+FROM node:22-alpine as runner
+
+RUN apk add --no-cache bash
+
 RUN mkdir -p /app
 WORKDIR /app
+
 COPY --from=web-build /app/package*.json .
 COPY --from=web-build /app/next.config.mjs ./
 COPY --from=web-build /app/.next/standalone ./
 COPY --from=web-build /app/.next/static ./.next/static
 
+COPY config.yaml .
+COPY hack/mono-start.sh ./mono-start.sh
+
+COPY --from=go-build /workspace/app .
+
 ENV HOSTNAME 0.0.0.0
 
 EXPOSE 3000
-ENTRYPOINT ["node", "server.js"]
+#ENTRYPOINT ["node", "server.js"]
+CMD ["/bin/bash", "mono-start.sh"]
