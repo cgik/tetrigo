@@ -1,4 +1,4 @@
-const apiUrlV1 = `http://127.0.0.1:18080`
+const apiUrlV1 = `http://localhost:18080`
 
 export async function fetchGetGame(gameId) {
     const res = await fetch(`${apiUrlV1}/game/load/${gameId}`)
