@@ -19,7 +19,7 @@
     "wrangler": "^3.60.1"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.11.3",
+    "@cloudflare/next-on-pages": "^1.12.0",
     "@cloudflare/workers-types": "^4.20240605.0",
     "autoprefixer": "^10",
     "daisyui": "^4.12.2",
