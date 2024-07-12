@@ -4,6 +4,7 @@ import Navigation from "@/components/Navigation";
 import Game from "@/components/Game";
 import Stats from "@/components/Stats";
 import Script from "next/script";
+import CreateGameButton from "@/components/CreateGameButton";
 
 // async function wasmLoad() {
 //     const goWasm = new window.Go();
@@ -26,6 +27,7 @@ export default function Page() {
 
       <div className="flex justify-center">
         <Stats />
+        <CreateGameButton />
       </div>
     </div>
   );

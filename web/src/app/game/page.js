@@ -4,7 +4,6 @@ import Game from "@/components/Game";
 import Navigation from "@/components/Navigation";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { fetchCreateGame } from "@/common/game-api";
 
 export default function GamePage() {
   function GameSetup() {
@@ -12,12 +11,9 @@ export default function GamePage() {
     let gameId = searchParams.get("id");
 
     if (!gameId) {
-      fetchCreateGame().then((data) => {
-        console.log("Game created:", data);
-        gameId = data.game.id
-      })
-      return <div>Cannot find or create game.</div>
+      return <div>Not sure how you got here but you were looking to create a gamne probably!</div>
     }
+
     return <Game id={gameId} canvasWidth={336} canvasHeight={670} />;
   }
 

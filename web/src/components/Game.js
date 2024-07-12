@@ -15,6 +15,7 @@ export default function Game({ id, canvasWidth, canvasHeight }) {
 
   useEffect(() => {
     fetchGetGame(gameId).then((data) => {
+      console.log("Getting game data for: ", gameId)
       setGame(data);
     });
   }, [gameId]);

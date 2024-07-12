@@ -21,7 +21,7 @@ export default function Navigation() {
         </button>
       </div>
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">tetrigo</a>
+        <a className="btn btn-ghost text-xl" href="/">tetrigo</a>
       </div>
       <div className="flex-none">
         <button className="btn btn-square btn-ghost">

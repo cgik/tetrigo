@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 )
 
 type Impl interface {
@@ -46,6 +47,7 @@ func (s *Interface) CreateGame(c echo.Context) error {
 	g, err := s.impl.CreateGame()
 
 	if err != nil {
+		log.Error("Issue creating game:", err)
 		res.Success = "false"
 		res.Data.Message = fmt.Sprint(err)
 		return c.JSON(http.StatusInternalServerError, res)
@@ -64,6 +66,7 @@ func (s *Interface) LoadGame(c echo.Context) error {
 	g, err := s.impl.GetGameByID(id)
 
 	if err != nil {
+		log.Error("Issue loading game:", err, id)
 		res.Success = "false"
 		res.Data.Message = fmt.Sprint(err)
 		return c.JSON(http.StatusInternalServerError, res)
