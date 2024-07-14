@@ -20,10 +20,19 @@ export default function GamePage() {
   return (
     <div className="min-h-screen bg-base-200">
       <Navigation />
-      <div className="flex justify-center">
-        <Suspense fallback={<div>Loading...</div>}>
-          <GameSetup />
-        </Suspense>
+
+      <div className="grid grid-cols-3 gap-4 place-content-evenly h-48">
+        <div>
+          <h1 className="text-xl">Controls</h1>
+          <p>Arrow keys: move the cursor around</p>
+          <p>Space: Switch blocks</p>
+        </div>
+        <div>
+          <Suspense fallback={<div>Loading...</div>}>
+            <GameSetup />
+          </Suspense>
+        </div>
+        <div></div>
       </div>
     </div>
   );
