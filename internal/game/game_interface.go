@@ -3,8 +3,10 @@ package game
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/labstack/echo/v4"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 )
 
 type Impl interface {
@@ -31,11 +33,12 @@ type Response struct {
 
 func NewHttpInterface(e *echo.Echo, impl Impl) {
 	i := &Interface{
-		impl: impl,
+		impl:  impl,
+		serve: e,
 	}
-	e.GET("/game/create", i.CreateGame)
-	e.GET("/game/load/:id", i.LoadGame)
-	e.GET("/game/list", i.ListGames)
+	i.serve.GET("/game/create", i.CreateGame)
+	i.serve.GET("/game/load/:id", i.LoadGame)
+	i.serve.GET("/game/list", i.ListGames)
 }
 
 func (s *Interface) CreateGame(c echo.Context) error {
@@ -44,6 +47,7 @@ func (s *Interface) CreateGame(c echo.Context) error {
 	g, err := s.impl.CreateGame()
 
 	if err != nil {
+		log.Error("Issue creating game:", err)
 		res.Success = "false"
 		res.Data.Message = fmt.Sprint(err)
 		return c.JSON(http.StatusInternalServerError, res)
@@ -62,6 +66,7 @@ func (s *Interface) LoadGame(c echo.Context) error {
 	g, err := s.impl.GetGameByID(id)
 
 	if err != nil {
+		log.Error("Issue loading game:", err, id)
 		res.Success = "false"
 		res.Data.Message = fmt.Sprint(err)
 		return c.JSON(http.StatusInternalServerError, res)

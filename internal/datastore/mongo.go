@@ -3,13 +3,13 @@ package datastore
 import (
 	"context"
 	"encoding/json"
-	"github.com/labstack/gommon/log"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log/slog"
 	"time"
+
+	"github.com/labstack/gommon/log"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type DataStore struct {
@@ -82,11 +82,11 @@ func (m *DataStore) Insert(collection string, item interface{}) error {
 }
 
 func (m *DataStore) FindById(collection string, id string) ([]byte, error) {
-	objId, err := primitive.ObjectIDFromHex(id)
+	//objId, err := primitive.ObjectIDFromHex(id)
 	var result bson.M
 
-	err = m.database.Collection(collection).
-		FindOne(context.Background(), bson.D{{"_id", objId}}).
+	err := m.database.Collection(collection).
+		FindOne(context.Background(), bson.D{{"id", id}}).
 		Decode(&result)
 
 	if err != nil {

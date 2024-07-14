@@ -2,6 +2,7 @@ package game
 
 import (
 	"errors"
+	"math/rand/v2"
 )
 
 type Board struct {
@@ -15,9 +16,11 @@ type Board struct {
 
 func createRow(rowLength int, y int) []*Block {
 	var row []*Block
+	var previousColor = -1
 
 	for x := 0; x < rowLength; x++ {
-		b := newBlock(y, x, 1)
+		previousColor = rand.IntN(4)
+		b := newBlock(x, y, int32(previousColor))
 		row = append(row, b)
 	}
 	return row

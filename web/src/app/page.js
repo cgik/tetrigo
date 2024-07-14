@@ -1,32 +1,30 @@
 "use client";
 
 import Navigation from "@/components/Navigation";
-import Game from "@/components/Game";
 import Stats from "@/components/Stats";
-import Script from "next/script";
+import CreateGameButton from "@/components/CreateGameButton";
 
-// async function wasmLoad() {
-//     const goWasm = new window.Go();
-//     const result = await WebAssembly.instantiateStreaming(
-//         fetch("static/tetrigo.wasm"),
-//         goWasm.importObject
-//     );
-//
-//     goWasm.run(result.instance);
-// }
 
 export default function Page() {
   return (
     <div className="min-h-screen bg-base-200">
-      {/*<Script src="static/wasm_exec.js"*/}
-      {/*        onLoad={wasmLoad}*/}
-      {/*/>*/}
-
       <Navigation />
 
-      <div className="flex justify-center">
-        <Stats />
+      <div className="grid grid-cols-3 gap-4 place-content-evenly h-48">
+        <div>
+          <h1 className="text-xl">Message from the dev</h1>
+          <div className="chat chat-start">
+            <div className="chat-bubble chat-bubble-primary">This is very much still in development. 7/2024</div>
+          </div>
+        </div>
+        <div>
+          <Stats />
+        </div>
+        <div>
+          <CreateGameButton />
+        </div>
       </div>
+
     </div>
   );
 }

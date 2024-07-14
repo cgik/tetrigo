@@ -37,6 +37,8 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v2
         env:
           REGISTRY: ${{ env.GCP_REPOSITORY }}/${{ secrets.GCP_PROJECT }}/tetrigo
+          VERSION: ${{ env.VERSION }}
         with:
           service: tetrigo-web
           image: ${{ env.REGISTRY }}/${{ inputs.app }}:${{ env.VERSION }}
+          region: us-west1
