@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-    tags:
-      - 'v*'
+    # tags:
+    #   - 'v*'
 
 concurrency:
   group: ${{ github.ref }}
@@ -17,9 +17,9 @@ jobs:
       app: tetrigo-web
     secrets: inherit
 
-  deploy:
-    if: startsWith(github.event.ref, 'refs/tags/v')
-    uses: ./.github/workflows/deploy.yml
-    with:
-      app: tetrigo-web
-    secrets: inherit
+  # deploy:
+  #   if: startsWith(github.event.ref, 'refs/tags/v')
+  #   uses: ./.github/workflows/deploy.yml
+  #   with:
+  #     app: tetrigo-web
+  #   secrets: inherit

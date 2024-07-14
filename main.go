@@ -1,13 +1,15 @@
 package main
 
 import (
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"github.com/spf13/viper"
 	"log/slog"
 	"main/internal/config"
 	"main/internal/datastore"
 	"main/internal/game"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/gommon/log"
+	"github.com/spf13/viper"
 )
 
 func main() {
@@ -23,7 +25,7 @@ func main() {
 	cfgServerPort := cfg.GetString(`app.port`)
 
 	if err := httpServer.Start(cfgServerPort); err != nil {
-		slog.Error("Unable to start application: ", err)
+		log.Error("Unable to start application: ", err)
 	}
 }
 
